@@ -1,0 +1,73 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Student;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+use Inertia\Inertia;
+
+class StudentController extends Controller
+{
+    public function index(Request $request)
+    {
+        $query = Student::query();
+
+        if ($request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('nis', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->class) {
+            $query->where('class', $request->class);
+        }
+
+        // Select only necessary fields
+        $students = $query->select('id', 'nis', 'name', 'class', 'address', 'photo_url')
+            ->orderBy('name', 'asc')
+            ->paginate(15)->withQueryString();
+
+        return Inertia::render('Students/Index', [
+            'students' => $students,
+            'filters' => $request->only(['search', 'class']),
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'nis' => 'required|string|unique:students',
+            'name' => 'required|string',
+            'class' => 'required|string',
+            'address' => 'nullable|string',
+            'photo_url' => 'nullable|string',
+        ]);
+
+        Student::create($validated);
+
+        return redirect()->back()->with('success', 'Siswa berhasil ditambahkan!');
+    }
+
+    public function update(Request $request, Student $student)
+    {
+        $validated = $request->validate([
+            'nis' => 'required|string|unique:students,nis,' . $student->id,
+            'name' => 'required|string',
+            'class' => 'required|string',
+            'address' => 'nullable|string',
+            'photo_url' => 'nullable|string',
+        ]);
+
+        $student->update($validated);
+
+        return redirect()->back()->with('success', 'Data siswa berhasil diperbarui!');
+    }
+
+    public function destroy(Student $student)
+    {
+        $student->delete();
+
+        return redirect()->back()->with('success', 'Siswa berhasil dihapus!');
+    }
+}

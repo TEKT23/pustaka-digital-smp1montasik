@@ -11,10 +11,10 @@ export default function Index({ students, filters }) {
     const { data, setData, post, patch, delete: destroy, processing, errors, reset } = useForm({
         id: '',
         nis: '',
+        nisn: '',
         name: '',
         class: '',
         address: '',
-        photo_url: '',
     });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,14 +38,12 @@ export default function Index({ students, filters }) {
         if (!printRef.current) return;
         setIsDownloading(true);
         try {
-            // Using a specific window size for html2canvas ensures consistent rendering
+            // Let html2canvas calculate dimensions automatically to prevent subpixel clipping
             const canvas = await html2canvas(printRef.current, {
-                scale: 2, // 2 is enough for good quality and keeps file size small
+                scale: 3, // Higher scale for better PDF print quality
                 useCORS: true,
                 backgroundColor: '#ffffff',
-                logging: false,
-                width: printRef.current.offsetWidth,
-                height: printRef.current.offsetHeight,
+                logging: false
             });
             
             const imgData = canvas.toDataURL('image/png');
@@ -100,10 +98,10 @@ export default function Index({ students, filters }) {
         setData({
             id: student.id,
             nis: student.nis,
+            nisn: student.nisn || '',
             name: student.name,
             class: student.class,
             address: student.address || '',
-            photo_url: student.photo_url || '',
         });
         setIsEdit(true);
         setIsModalOpen(true);
@@ -170,8 +168,7 @@ export default function Index({ students, filters }) {
                             <table className="w-full text-sm text-left text-gray-500">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                                     <tr>
-                                        <th className="px-6 py-3">Foto</th>
-                                        <th className="px-6 py-3">NIS</th>
+                                        <th className="px-6 py-3">NIS / NISN</th>
                                         <th className="px-6 py-3">Nama</th>
                                         <th className="px-6 py-3">Kelas</th>
                                         <th className="px-6 py-3 text-right">Aksi</th>
@@ -180,14 +177,10 @@ export default function Index({ students, filters }) {
                                 <tbody>
                                     {students.data.map((student) => (
                                         <tr key={student.id} className="bg-white border-b hover:bg-gray-50">
-                                            <td className="px-6 py-4">
-                                                <img 
-                                                    src={student.photo_url || 'https://via.placeholder.com/40'} 
-                                                    alt={student.name}
-                                                    className="w-10 h-10 rounded-full object-cover border"
-                                                />
+                                            <td className="px-6 py-4 font-medium text-gray-900">
+                                                <div>{student.nis}</div>
+                                                {student.nisn && <div className="text-xs text-gray-500">{student.nisn}</div>}
                                             </td>
-                                            <td className="px-6 py-4 font-medium text-gray-900">{student.nis}</td>
                                             <td className="px-6 py-4 flex flex-col">
                                                 <span>{student.name}</span>
                                                 <span className="text-xs text-gray-400 mt-1 truncate max-w-[200px]">{student.address || '-'}</span>
@@ -264,6 +257,16 @@ export default function Index({ students, filters }) {
                                 {errors.nis && <div className="text-red-500 text-xs mt-1">{errors.nis}</div>}
                             </div>
                             <div>
+                                <label className="block text-sm font-medium text-gray-700">NISN (Opsional)</label>
+                                <input 
+                                    type="text" 
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                    value={data.nisn}
+                                    onChange={e => setData('nisn', e.target.value)}
+                                />
+                                {errors.nisn && <div className="text-red-500 text-xs mt-1">{errors.nisn}</div>}
+                            </div>
+                            <div>
                                 <label className="block text-sm font-medium text-gray-700">Nama Lengkap</label>
                                 <input 
                                     type="text" 
@@ -299,16 +302,6 @@ export default function Index({ students, filters }) {
                                     rows="2"
                                 />
                                 {errors.address && <div className="text-red-500 text-xs mt-1">{errors.address}</div>}
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">URL Foto (Opsional)</label>
-                                <input 
-                                    type="text" 
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="https://..."
-                                    value={data.photo_url}
-                                    onChange={e => setData('photo_url', e.target.value)}
-                                />
                             </div>
 
                             <div className="pt-4 flex justify-end space-x-3">

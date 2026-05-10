@@ -24,7 +24,7 @@ class StudentController extends Controller
         }
 
         // Select only necessary fields
-        $students = $query->select('id', 'nis', 'name', 'class', 'address', 'photo_url')
+        $students = $query->select('id', 'nis', 'nisn', 'name', 'class', 'address')
             ->orderBy('name', 'asc')
             ->paginate(15)->withQueryString();
 
@@ -38,10 +38,10 @@ class StudentController extends Controller
     {
         $validated = $request->validate([
             'nis' => 'required|string|unique:students',
+            'nisn' => 'nullable|string',
             'name' => 'required|string',
             'class' => 'required|string',
             'address' => 'nullable|string',
-            'photo_url' => 'nullable|string',
         ]);
 
         Student::create($validated);
@@ -53,10 +53,10 @@ class StudentController extends Controller
     {
         $validated = $request->validate([
             'nis' => 'required|string|unique:students,nis,' . $student->id,
+            'nisn' => 'nullable|string',
             'name' => 'required|string',
             'class' => 'required|string',
             'address' => 'nullable|string',
-            'photo_url' => 'nullable|string',
         ]);
 
         $student->update($validated);

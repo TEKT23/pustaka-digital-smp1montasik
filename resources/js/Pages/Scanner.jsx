@@ -88,11 +88,9 @@ export default function Scanner() {
                 {status === 'success' && student && (
                     <div className="bg-white p-12 rounded-3xl shadow-2xl transform scale-110 transition-transform duration-300">
                         <div className="flex flex-col items-center space-y-6">
-                            <img 
-                                src={student.photo_url || 'https://via.placeholder.com/200'} 
-                                alt={student.name}
-                                className="w-48 h-48 rounded-full border-8 border-green-100 shadow-lg object-cover"
-                            />
+                            <div className="w-48 h-48 rounded-full border-8 border-green-100 shadow-lg flex items-center justify-center bg-gray-50">
+                                <span className="text-8xl">👤</span>
+                            </div>
                             <div className="text-center">
                                 <div className="text-5xl font-black text-gray-900 mb-2">{student.name}</div>
                                 <div className="text-2xl font-semibold text-gray-600">{student.class}</div>

@@ -23,7 +23,7 @@ class AttendanceController extends Controller
         ]);
 
         // Select only necessary fields to reduce memory usage and payload size
-        $student = Student::select('id', 'name', 'class', 'photo_url')->where('nis', $request->nis)->first();
+        $student = Student::select('id', 'name', 'class')->where('nis', $request->nis)->first();
 
         if (!$student) {
             return response()->json([

@@ -5,7 +5,14 @@ const StudentCardPrint = forwardRef(({ student }, ref) => {
     if (!student) return null;
 
     return (
-        <div ref={ref} className="bg-white p-4 w-[4in] flex flex-col items-center gap-6 print:p-0 print:gap-4 print:bg-white">
+        <>
+        <style dangerouslySetInnerHTML={{ __html: `
+            @media print {
+                @page { margin: 0; size: auto; }
+                body { margin: 0; }
+            }
+        ` }} />
+        <div ref={ref} className="bg-white p-4 w-[4in] flex flex-col items-center gap-6 print:p-0 print:m-0 print:gap-2 print:bg-white">
             {/* Bagian Depan Kartu */}
             <div className="w-[3.375in] h-[2.125in] border border-gray-400 rounded-lg overflow-hidden relative bg-white shadow-sm print:shadow-none" style={{ display: 'flex', flexDirection: 'column' }}>
                 {/* Header */}
@@ -18,48 +25,42 @@ const StudentCardPrint = forwardRef(({ student }, ref) => {
                 </div>
 
                 {/* Body */}
-                <div className="flex-1 flex p-2 z-10 relative overflow-hidden">
-                    {/* Foto */}
-                    <div className="w-[0.7in] h-[0.9in] border border-gray-300 flex-shrink-0 bg-gray-50 flex items-center justify-center overflow-hidden">
-                        {student.photo_url ? (
-                            <img src={student.photo_url} alt="Foto" className="w-full h-full object-cover" />
-                        ) : (
-                            <div className="text-center">
-                                <div className="text-[16px] text-gray-300">👤</div>
-                                <div className="text-[6px] text-gray-400 uppercase">FOTO</div>
-                            </div>
-                        )}
-                    </div>
-
+                <div className="flex-1 flex flex-col px-3 py-1 z-10 relative overflow-hidden">
                     {/* Data */}
-                    <div className="ml-2 flex-1 flex flex-col justify-between overflow-hidden">
-                        <div className="space-y-0.5">
-                            <div className="text-[8px] flex items-start">
-                                <div className="font-bold text-gray-500 w-10 flex-shrink-0">NAMA</div>
-                                <div className="font-black text-gray-800 uppercase flex-1 leading-tight">: {student.name}</div>
+                    <div className="flex-1 flex flex-col justify-start overflow-hidden pt-1">
+                        <div className="space-y-1">
+                            <div className="text-[9px] flex items-start">
+                                <div className="font-bold text-gray-500 w-16 flex-shrink-0">NAMA</div>
+                                <div className="font-black text-gray-800 uppercase flex-1 leading-none">: {student.name}</div>
+                            </div>
+                            <div className="text-[8.5px] flex items-start">
+                                <div className="font-bold text-gray-500 w-16 flex-shrink-0">NIS / NISN</div>
+                                <div className="font-bold text-gray-800 uppercase flex-1 leading-none">: {student.nis} {student.nisn ? `/ ${student.nisn}` : ''}</div>
+                            </div>
+                            <div className="text-[8.5px] flex items-start">
+                                <div className="font-bold text-gray-500 w-16 flex-shrink-0">KELAS</div>
+                                <div className="font-bold text-gray-800 uppercase flex-1 leading-none">: {student.class}</div>
                             </div>
                             <div className="text-[8px] flex items-start">
-                                <div className="font-bold text-gray-500 w-10 flex-shrink-0">NIS/KL</div>
-                                <div className="font-bold text-gray-800 uppercase flex-1 leading-tight">: {student.nis} / {student.class}</div>
-                            </div>
-                            <div className="text-[8px] flex items-start">
-                                <div className="font-bold text-gray-500 w-10 flex-shrink-0">ALAMAT</div>
-                                <div className="font-bold text-gray-800 uppercase flex-1 leading-tight line-clamp-2">: {student.address || '-'}</div>
+                                <div className="font-bold text-gray-500 w-16 flex-shrink-0">ALAMAT</div>
+                                <div className="font-medium text-gray-800 uppercase flex-1 leading-tight">
+                                    : {student.address ? (student.address.length > 60 ? student.address.substring(0, 60) + '...' : student.address) : '-'}
+                                </div>
                             </div>
                         </div>
-                        
-                        {/* Barcode di pojok kanan bawah */}
-                        <div className="self-end mt-auto h-8 flex items-center justify-end bg-white">
-                            <Barcode 
-                                value={student.nis} 
-                                format="CODE128" 
-                                width={1.2} 
-                                height={20} 
-                                displayValue={false} 
-                                margin={0}
-                                background="transparent"
-                            />
-                        </div>
+                    </div>
+                    
+                    {/* Barcode di tengah bawah */}
+                    <div className="h-8 flex items-center justify-center bg-white mt-auto mb-0.5">
+                        <Barcode 
+                            value={student.nis} 
+                            format="CODE128" 
+                            width={1.3} 
+                            height={22} 
+                            displayValue={false} 
+                            margin={0}
+                            background="transparent"
+                        />
                     </div>
                 </div>
 
@@ -96,6 +97,7 @@ const StudentCardPrint = forwardRef(({ student }, ref) => {
                 </div>
             </div>
         </div>
+        </>
     );
 });
 

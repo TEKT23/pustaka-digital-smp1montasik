@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Attendance;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Cache;
 
 class AttendanceController extends Controller
 {
@@ -36,6 +37,11 @@ class AttendanceController extends Controller
             'student_id' => $student->id,
             'scanned_at' => now(),
         ]);
+
+        // Invalidate Dashboard Cache
+        Cache::forget('dashboard_week_count');
+        Cache::forget('dashboard_chart_data');
+        Cache::forget('dashboard_leaderboard');
 
         return response()->json([
             'success' => true,

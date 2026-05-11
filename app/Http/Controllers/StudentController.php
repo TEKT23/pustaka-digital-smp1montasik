@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 use Inertia\Inertia;
 
@@ -61,12 +62,18 @@ class StudentController extends Controller
 
         $student->update($validated);
 
+        // Clear leaderboard cache in case name/class changed
+        Cache::forget('dashboard_leaderboard');
+
         return redirect()->back()->with('success', 'Data siswa berhasil diperbarui!');
     }
 
     public function destroy(Student $student)
     {
         $student->delete();
+
+        // Clear leaderboard cache as student is removed
+        Cache::forget('dashboard_leaderboard');
 
         return redirect()->back()->with('success', 'Siswa berhasil dihapus!');
     }

@@ -33,7 +33,7 @@ COPY . .
 
 # 7. Install PHP dependencies & Node dependencies, lalu build frontend (Vite)
 RUN composer install --optimize-autoloader --no-dev
-RUN npm install
+RUN npm install --legacy-peer-deps
 RUN npm run build
 
 # 8. Set izin (permissions) untuk folder storage agar Laravel bisa menulis log/cache

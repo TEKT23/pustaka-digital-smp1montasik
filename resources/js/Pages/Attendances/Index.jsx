@@ -24,7 +24,7 @@ export default function Index({ attendances }) {
                                         <th className="px-6 py-3">Waktu Scan</th>
                                         <th className="px-6 py-3">NIS</th>
                                         <th className="px-6 py-3">Nama Siswa</th>
-                                        <th className="px-6 py-3">Kelas</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -35,11 +35,7 @@ export default function Index({ attendances }) {
                                             </td>
                                             <td className="px-6 py-4">{attendance.student.nis}</td>
                                             <td className="px-6 py-4">{attendance.student.name}</td>
-                                            <td className="px-6 py-4">
-                                                <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs font-semibold rounded">
-                                                    {attendance.student.class}
-                                                </span>
-                                            </td>
+
                                         </tr>
                                     ))}
                                 </tbody>

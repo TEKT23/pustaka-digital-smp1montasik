@@ -41,11 +41,14 @@ class StudentController extends Controller
             'nis' => 'required|string|unique:students',
             'nisn' => 'nullable|string',
             'name' => 'required|string',
-            'class' => 'required|string',
+            'class' => 'nullable|string',
             'address' => 'nullable|string',
         ]);
 
         Student::create($validated);
+        
+        // Clear dashboard cache to update stats
+        Cache::forget('dashboard_leaderboard');
 
         return redirect()->back()->with('success', 'Siswa berhasil ditambahkan!');
     }
@@ -56,7 +59,7 @@ class StudentController extends Controller
             'nis' => 'required|string|unique:students,nis,' . $student->id,
             'nisn' => 'nullable|string',
             'name' => 'required|string',
-            'class' => 'required|string',
+            'class' => 'nullable|string',
             'address' => 'nullable|string',
         ]);
 

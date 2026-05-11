@@ -24,7 +24,7 @@ class AttendanceController extends Controller
         ]);
 
         // Select only necessary fields to reduce memory usage and payload size
-        $student = Student::select('id', 'name', 'class')->where('nis', $request->nis)->first();
+        $student = Student::select('id', 'name')->where('nis', $request->nis)->first();
 
         if (!$student) {
             return response()->json([
@@ -53,7 +53,7 @@ class AttendanceController extends Controller
     public function logs()
     {
         // Eager load only necessary fields for student
-        $attendances = Attendance::with('student:id,nis,name,class')
+        $attendances = Attendance::with('student:id,nis,name')
             ->orderBy('scanned_at', 'desc')
             ->paginate(15);
 

@@ -206,7 +206,17 @@ export default function AuthenticatedLayout({ header, children }) {
                 </header>
             )}
 
-            <main>{children}</main>
+            <main>
+                {/* Flash Messages */}
+                {usePage().props.flash && usePage().props.flash.success && (
+                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-4">
+                        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                            <span className="block sm:inline">{usePage().props.flash.success}</span>
+                        </div>
+                    </div>
+                )}
+                {children}
+            </main>
         </div>
     );
 }

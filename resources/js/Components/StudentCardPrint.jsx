@@ -34,12 +34,12 @@ const StudentCardPrint = forwardRef(({ student }, ref) => {
                                 <div className="font-black text-gray-800 uppercase flex-1 leading-none">: {student.name}</div>
                             </div>
                             <div className="text-[8.5px] flex items-start">
-                                <div className="font-bold text-gray-500 w-16 flex-shrink-0">NIS / NISN</div>
-                                <div className="font-bold text-gray-800 uppercase flex-1 leading-none">: {student.nis} {student.nisn ? `/ ${student.nisn}` : ''}</div>
+                                <div className="font-bold text-gray-500 w-16 flex-shrink-0">NIS</div>
+                                <div className="font-bold text-gray-800 uppercase flex-1 leading-none">: {student.nis}</div>
                             </div>
                             <div className="text-[8.5px] flex items-start">
-                                <div className="font-bold text-gray-500 w-16 flex-shrink-0">KELAS</div>
-                                <div className="font-bold text-gray-800 uppercase flex-1 leading-none">: {student.class}</div>
+                                <div className="font-bold text-gray-500 w-16 flex-shrink-0">NISN</div>
+                                <div className="font-bold text-gray-800 uppercase flex-1 leading-none">: {student.nisn || '-'}</div>
                             </div>
                             <div className="text-[8px] flex items-start">
                                 <div className="font-bold text-gray-500 w-16 flex-shrink-0">ALAMAT</div>

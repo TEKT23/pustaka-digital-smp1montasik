@@ -13,7 +13,6 @@ export default function Index({ students, filters }) {
         nis: '',
         nisn: '',
         name: '',
-        class: '',
         address: '',
     });
 
@@ -85,7 +84,7 @@ export default function Index({ students, filters }) {
 
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
-        router.get(route('students.index'), { search: e.target.value, class: filters.class }, { preserveState: true, replace: true });
+        router.get(route('students.index'), { search: e.target.value }, { preserveState: true, replace: true });
     };
 
     const openCreateModal = () => {
@@ -100,7 +99,6 @@ export default function Index({ students, filters }) {
             nis: student.nis,
             nisn: student.nisn || '',
             name: student.name,
-            class: student.class,
             address: student.address || '',
         });
         setIsEdit(true);
@@ -170,7 +168,7 @@ export default function Index({ students, filters }) {
                                     <tr>
                                         <th className="px-6 py-3">NIS / NISN</th>
                                         <th className="px-6 py-3">Nama</th>
-                                        <th className="px-6 py-3">Kelas</th>
+
                                         <th className="px-6 py-3 text-right">Aksi</th>
                                     </tr>
                                 </thead>
@@ -185,11 +183,7 @@ export default function Index({ students, filters }) {
                                                 <span>{student.name}</span>
                                                 <span className="text-xs text-gray-400 mt-1 truncate max-w-[200px]">{student.address || '-'}</span>
                                             </td>
-                                            <td className="px-6 py-4">
-                                                <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded">
-                                                    {student.class}
-                                                </span>
-                                            </td>
+
                                             <td className="px-6 py-4 text-right space-x-3">
                                                 <button 
                                                     onClick={() => triggerPrint(student)}
@@ -276,23 +270,7 @@ export default function Index({ students, filters }) {
                                 />
                                 {errors.name && <div className="text-red-500 text-xs mt-1">{errors.name}</div>}
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Kelas</label>
-                                <select 
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                    value={data.class}
-                                    onChange={e => setData('class', e.target.value)}
-                                >
-                                    <option value="">Pilih Kelas</option>
-                                    <option value="7A">7A</option>
-                                    <option value="7B">7B</option>
-                                    <option value="8A">8A</option>
-                                    <option value="8B">8B</option>
-                                    <option value="9A">9A</option>
-                                    <option value="9B">9B</option>
-                                </select>
-                                {errors.class && <div className="text-red-500 text-xs mt-1">{errors.class}</div>}
-                            </div>
+
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Alamat</label>
                                 <textarea 

@@ -34,12 +34,22 @@ const StudentCardPrint = forwardRef(({ student }, ref) => {
                                 <div className="font-black text-gray-800 uppercase flex-1 leading-none">: {student.name}</div>
                             </div>
                             <div className="text-[8.5px] flex items-start">
-                                <div className="font-bold text-gray-500 w-16 flex-shrink-0">NIS</div>
-                                <div className="font-bold text-gray-800 uppercase flex-1 leading-none">: {student.nis}</div>
+                                <div className="font-bold text-gray-500 w-16 flex-shrink-0">NIS / NISN</div>
+                                <div className="font-bold text-gray-800 uppercase flex-1 leading-none">: {student.nis} / {student.nisn || '-'}</div>
                             </div>
                             <div className="text-[8.5px] flex items-start">
-                                <div className="font-bold text-gray-500 w-16 flex-shrink-0">NISN</div>
-                                <div className="font-bold text-gray-800 uppercase flex-1 leading-none">: {student.nisn || '-'}</div>
+                                <div className="font-bold text-gray-500 w-16 flex-shrink-0">TTL</div>
+                                <div className="font-bold text-gray-800 uppercase flex-1 leading-none">
+                                    : {(() => {
+                                        if (!student.birth_place && !student.birth_date) return '-';
+                                        if (!student.birth_date) return student.birth_place;
+                                        const date = new Date(student.birth_date);
+                                        const day = String(date.getDate()).padStart(2, '0');
+                                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                                        const year = date.getFullYear();
+                                        return `${student.birth_place || ''}, ${day}-${month}-${year}`;
+                                    })()}
+                                </div>
                             </div>
                             <div className="text-[8px] flex items-start">
                                 <div className="font-bold text-gray-500 w-16 flex-shrink-0">ALAMAT</div>
@@ -50,17 +60,22 @@ const StudentCardPrint = forwardRef(({ student }, ref) => {
                         </div>
                     </div>
                     
-                    {/* Barcode di tengah bawah */}
-                    <div className="h-8 flex items-center justify-center bg-white mt-auto mb-0.5">
-                        <Barcode 
-                            value={student.nis} 
-                            format="CODE128" 
-                            width={1.3} 
-                            height={22} 
-                            displayValue={false} 
-                            margin={0}
-                            background="transparent"
-                        />
+                    {/* Validity Text & Barcode */}
+                    <div className="mt-auto flex flex-col items-center">
+                        <div className="text-[6.5px] italic text-gray-500 mb-0.5">
+                            Berlaku selama menjadi siswa SMPN 1 Montasik
+                        </div>
+                        <div className="h-8 flex items-center justify-center bg-white mb-0.5">
+                            <Barcode 
+                                value={student.nis} 
+                                format="CODE128" 
+                                width={1.3} 
+                                height={22} 
+                                displayValue={false} 
+                                margin={0}
+                                background="transparent"
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -84,12 +99,6 @@ const StudentCardPrint = forwardRef(({ student }, ref) => {
                         <li>Buku hilang/rusak wajib diganti/dibayar.</li>
                         <li>Jika kartu hilang, segera lapor petugas.</li>
                     </ol>
-                    <div className="text-right mt-1 pr-1">
-                        <p className="text-[6px]">Kepala Perpustakaan,</p>
-                        <div className="h-6"></div>
-                        <p className="font-bold underline text-[7px]">Nurlaila, S.Pd</p>
-                        <p className="text-[6px]">NIP. 19800101 200501 2 001</p>
-                    </div>
                 </div>
                 {/* Background watermark */}
                 <div className="absolute inset-0 opacity-5 pointer-events-none flex items-center justify-center">

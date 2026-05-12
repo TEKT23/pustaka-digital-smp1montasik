@@ -25,7 +25,7 @@ class StudentController extends Controller
         }
 
         // Select only necessary fields
-        $students = $query->select('id', 'nis', 'nisn', 'name', 'class', 'address')
+        $students = $query->select('id', 'nis', 'nisn', 'name', 'class', 'address', 'birth_place', 'birth_date')
             ->orderBy('name', 'asc')
             ->paginate(15)->withQueryString();
 
@@ -43,6 +43,8 @@ class StudentController extends Controller
             'name' => 'required|string',
             'class' => 'nullable|string',
             'address' => 'nullable|string',
+            'birth_place' => 'nullable|string|max:255',
+            'birth_date' => 'nullable|date|before:today',
         ]);
 
         Student::create($validated);
@@ -61,6 +63,8 @@ class StudentController extends Controller
             'name' => 'required|string',
             'class' => 'nullable|string',
             'address' => 'nullable|string',
+            'birth_place' => 'nullable|string|max:255',
+            'birth_date' => 'nullable|date|before:today',
         ]);
 
         $student->update($validated);

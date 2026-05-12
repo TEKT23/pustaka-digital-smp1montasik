@@ -9,7 +9,7 @@ class Student extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nis', 'nisn', 'name', 'class', 'address', 'photo_url'];
+    protected $fillable = ['nis', 'nisn', 'name', 'class', 'address', 'photo_url', 'birth_place', 'birth_date'];
 
     public function attendances()
     {

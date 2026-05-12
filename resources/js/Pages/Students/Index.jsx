@@ -14,6 +14,8 @@ export default function Index({ students, filters }) {
         nisn: '',
         name: '',
         address: '',
+        birth_place: '',
+        birth_date: '',
     });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -100,6 +102,8 @@ export default function Index({ students, filters }) {
             nisn: student.nisn || '',
             name: student.name,
             address: student.address || '',
+            birth_place: student.birth_place || '',
+            birth_date: student.birth_date || '',
         });
         setIsEdit(true);
         setIsModalOpen(true);
@@ -116,6 +120,17 @@ export default function Index({ students, filters }) {
                 onSuccess: () => setIsModalOpen(false),
             });
         }
+    };
+
+    const formatTTL = (place, dateString) => {
+        if (!place && !dateString) return '-';
+        if (!dateString) return place;
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        const formattedDate = `${day}-${month}-${year}`;
+        return place ? `${place}, ${formattedDate}` : formattedDate;
     };
 
     const handleDelete = (id) => {
@@ -167,7 +182,7 @@ export default function Index({ students, filters }) {
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                                     <tr>
                                         <th className="px-6 py-3">NIS / NISN</th>
-                                        <th className="px-6 py-3">Nama</th>
+                                        <th className="px-6 py-3">Nama / TTL</th>
 
                                         <th className="px-6 py-3 text-right">Aksi</th>
                                     </tr>
@@ -180,7 +195,8 @@ export default function Index({ students, filters }) {
                                                 {student.nisn && <div className="text-xs text-gray-500">{student.nisn}</div>}
                                             </td>
                                             <td className="px-6 py-4 flex flex-col">
-                                                <span>{student.name}</span>
+                                                <span className="font-semibold">{student.name}</span>
+                                                <span className="text-xs text-gray-500">{formatTTL(student.birth_place, student.birth_date)}</span>
                                                 <span className="text-xs text-gray-400 mt-1 truncate max-w-[200px]">{student.address || '-'}</span>
                                             </td>
 
@@ -240,25 +256,27 @@ export default function Index({ students, filters }) {
                     <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
                         <h3 className="text-xl font-bold mb-6">{isEdit ? 'Edit Data Siswa' : 'Tambah Siswa Baru'}</h3>
                         <form onSubmit={submit} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">NIS</label>
-                                <input 
-                                    type="text" 
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                    value={data.nis}
-                                    onChange={e => setData('nis', e.target.value)}
-                                />
-                                {errors.nis && <div className="text-red-500 text-xs mt-1">{errors.nis}</div>}
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">NISN (Opsional)</label>
-                                <input 
-                                    type="text" 
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                    value={data.nisn}
-                                    onChange={e => setData('nisn', e.target.value)}
-                                />
-                                {errors.nisn && <div className="text-red-500 text-xs mt-1">{errors.nisn}</div>}
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">NIS</label>
+                                    <input 
+                                        type="text" 
+                                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                        value={data.nis}
+                                        onChange={e => setData('nis', e.target.value)}
+                                    />
+                                    {errors.nis && <div className="text-red-500 text-xs mt-1">{errors.nis}</div>}
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">NISN (Opsional)</label>
+                                    <input 
+                                        type="text" 
+                                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                        value={data.nisn}
+                                        onChange={e => setData('nisn', e.target.value)}
+                                    />
+                                    {errors.nisn && <div className="text-red-500 text-xs mt-1">{errors.nisn}</div>}
+                                </div>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Nama Lengkap</label>
@@ -269,6 +287,29 @@ export default function Index({ students, filters }) {
                                     onChange={e => setData('name', e.target.value)}
                                 />
                                 {errors.name && <div className="text-red-500 text-xs mt-1">{errors.name}</div>}
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Tempat Lahir</label>
+                                    <input 
+                                        type="text" 
+                                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                        value={data.birth_place}
+                                        onChange={e => setData('birth_place', e.target.value)}
+                                    />
+                                    {errors.birth_place && <div className="text-red-500 text-xs mt-1">{errors.birth_place}</div>}
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Tanggal Lahir</label>
+                                    <input 
+                                        type="date" 
+                                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                        value={data.birth_date}
+                                        onChange={e => setData('birth_date', e.target.value)}
+                                    />
+                                    {errors.birth_date && <div className="text-red-500 text-xs mt-1">{errors.birth_date}</div>}
+                                </div>
                             </div>
 
                             <div>

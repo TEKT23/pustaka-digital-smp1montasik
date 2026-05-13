@@ -11,6 +11,21 @@ export default function Scanner() {
 
     const [showManual, setShowManual] = useState(false);
 
+    // Keep server awake (Render Health Check)
+    useEffect(() => {
+        const pingServer = () => {
+            axios.get('/up').catch(() => {
+                // Ignore errors, we just want the request to hit the server
+            });
+        };
+
+        // Ping immediately and then every 30 seconds
+        pingServer();
+        const interval = setInterval(pingServer, 30000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     // Keep input focused at all times
     useEffect(() => {
         const keepFocus = () => {

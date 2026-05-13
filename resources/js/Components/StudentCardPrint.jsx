@@ -61,16 +61,16 @@ const StudentCardPrint = forwardRef(({ student }, ref) => {
                     </div>
                     
                     {/* Validity Text & Barcode */}
-                    <div className="mt-auto flex flex-col items-center">
-                        <div className="text-[6.5px] italic text-gray-500 mb-0.5">
+                    <div className="mt-auto flex flex-col items-center pb-1">
+                        <div className="text-[7px] italic text-gray-500 mb-1">
                             Berlaku selama menjadi siswa SMPN 1 Montasik
                         </div>
-                        <div className="h-8 flex items-center justify-center bg-white mb-0.5">
+                        <div className="h-8 flex items-center justify-center bg-white">
                             <Barcode 
                                 value={student.nis} 
                                 format="CODE128" 
-                                width={1.3} 
-                                height={22} 
+                                width={1.2} 
+                                height={20} 
                                 displayValue={false} 
                                 margin={0}
                                 background="transparent"
@@ -90,8 +90,8 @@ const StudentCardPrint = forwardRef(({ student }, ref) => {
                 <div className="bg-blue-800 text-white text-center py-1">
                     <h1 className="text-[10px] font-bold">TATA TERTIB PERPUSTAKAAN</h1>
                 </div>
-                <div className="p-2 text-[7px] leading-snug flex-1 flex flex-col justify-between">
-                    <ol className="list-decimal pl-3 space-y-0.5 text-gray-800">
+                <div className="p-2 pt-3 text-[7px] leading-snug flex-1 flex flex-col justify-start">
+                    <ol className="list-decimal pl-[18px] space-y-0.5 text-gray-800 pr-1">
                         <li>Kartu ini wajib dibawa saat berkunjung/meminjam buku.</li>
                         <li>Kartu anggota tidak boleh dipinjamkan.</li>
                         <li>Buku harus dikembalikan tepat waktu.</li>

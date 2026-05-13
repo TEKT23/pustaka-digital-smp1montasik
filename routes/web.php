@@ -9,6 +9,10 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\DashboardController;
 
+Route::get('/up', function () {
+    return response()->json(['status' => 'ok']);
+});
+
 Route::get('/', function () {
     return redirect()->route('login');
 });

@@ -9,24 +9,28 @@ export default function Scanner() {
     const [message, setMessage] = useState('');
     const inputRef = useRef(null);
 
+    const [showManual, setShowManual] = useState(false);
+
     // Keep input focused at all times
     useEffect(() => {
         const keepFocus = () => {
-            if (inputRef.current) {
+            if (inputRef.current && !showManual) {
                 inputRef.current.focus();
             }
         };
 
         keepFocus();
-        document.addEventListener('click', keepFocus);
+        if (!showManual) {
+            document.addEventListener('click', keepFocus);
+        }
 
         return () => {
             document.removeEventListener('click', keepFocus);
         };
-    }, []);
+    }, [showManual]);
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         if (!nis) return;
 
         setStatus('loading');
@@ -50,6 +54,7 @@ export default function Scanner() {
             new Audio('/sounds/error.mp3').play().catch(e => console.log('Audio play failed'));
         } finally {
             setNis('');
+            setShowManual(false);
             // Reset to idle after 3 seconds
             setTimeout(() => {
                 setStatus('idle');
@@ -66,16 +71,55 @@ export default function Scanner() {
         }`}>
             <Head title="Kiosk Scanner" />
 
-            <div className="text-center">
+            <div className="text-center w-full max-w-4xl px-4">
                 {status === 'idle' && (
-                    <div className="space-y-8 animate-pulse">
-                        <div className="text-6xl font-bold text-gray-800">PUSTAKA DIGITAL</div>
-                        <div className="text-2xl text-gray-600">Silakan Scan Kartu Pustaka Anda</div>
-                        <div className="mt-12">
-                            <svg className="mx-auto w-32 h-32 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 17h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                            </svg>
+                    <div className="space-y-8">
+                        <div className="animate-pulse">
+                            <div className="text-6xl font-bold text-gray-800">PUSTAKA DIGITAL</div>
+                            <div className="text-2xl text-gray-600">Silakan Scan Kartu Pustaka Anda</div>
                         </div>
+                        
+                        {!showManual ? (
+                            <div className="mt-12 flex flex-col items-center">
+                                <svg className="w-32 h-32 text-gray-400 mb-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 17h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                                </svg>
+                                <button 
+                                    onClick={() => setShowManual(true)}
+                                    className="text-gray-400 hover:text-indigo-600 transition-colors flex items-center gap-2 text-sm"
+                                >
+                                    <span className="p-2 border border-gray-300 rounded-lg">⌨️ Klik untuk Input Manual</span>
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="mt-12 flex flex-col items-center">
+                                <form onSubmit={handleSubmit} className="w-full max-w-md">
+                                    <input
+                                        autoFocus
+                                        type="text"
+                                        className="w-full text-center text-3xl font-mono p-4 border-4 border-indigo-500 rounded-2xl focus:ring-0 shadow-xl"
+                                        placeholder="Ketik NIS..."
+                                        value={nis}
+                                        onChange={(e) => setNis(e.target.value)}
+                                    />
+                                    <div className="mt-4 flex gap-4 justify-center">
+                                        <button 
+                                            type="submit"
+                                            className="px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold shadow-lg hover:bg-indigo-700 transition-all"
+                                        >
+                                            Submit
+                                        </button>
+                                        <button 
+                                            type="button"
+                                            onClick={() => { setShowManual(false); setNis(''); }}
+                                            className="px-8 py-3 bg-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-300 transition-all"
+                                        >
+                                            Batal
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -86,7 +130,7 @@ export default function Scanner() {
                 )}
 
                 {status === 'success' && student && (
-                    <div className="bg-white p-12 rounded-3xl shadow-2xl transform scale-110 transition-transform duration-300">
+                    <div className="bg-white p-12 rounded-3xl shadow-2xl transform scale-110 transition-transform duration-300 mx-auto max-w-lg">
                         <div className="flex flex-col items-center space-y-6">
                             <div className="w-48 h-48 rounded-full border-8 border-green-100 shadow-lg flex items-center justify-center bg-gray-50">
                                 <span className="text-8xl">👤</span>
@@ -103,30 +147,38 @@ export default function Scanner() {
                 )}
 
                 {status === 'error' && (
-                    <div className="bg-white p-12 rounded-3xl shadow-2xl transform scale-110">
+                    <div className="bg-white p-12 rounded-3xl shadow-2xl transform scale-110 mx-auto max-w-lg">
                         <div className="flex flex-col items-center space-y-6">
                             <div className="text-9xl">⚠️</div>
                             <div className="text-4xl font-black text-red-600">
                                 {message}
                             </div>
-                            <div className="text-xl text-gray-500">
-                                Silakan hubungi petugas perpustakaan.
+                            <div className="text-xl text-gray-500 text-center">
+                                Silakan hubungi petugas perpustakaan atau periksa kembali NIS Anda.
                             </div>
+                            <button 
+                                onClick={() => setStatus('idle')}
+                                className="px-8 py-3 bg-red-600 text-white rounded-xl font-bold shadow-lg"
+                            >
+                                Coba Lagi
+                            </button>
                         </div>
                     </div>
                 )}
             </div>
 
-            {/* Hidden Input for Scanner */}
-            <form onSubmit={handleSubmit} className="opacity-0 absolute">
-                <input
-                    ref={inputRef}
-                    type="text"
-                    value={nis}
-                    onChange={(e) => setNis(e.target.value)}
-                    autoComplete="off"
-                />
-            </form>
+            {/* Hidden Input for Scanner (Only active when manual input is hidden) */}
+            {!showManual && (
+                <form onSubmit={handleSubmit} className="opacity-0 absolute">
+                    <input
+                        ref={inputRef}
+                        type="text"
+                        value={nis}
+                        onChange={(e) => setNis(e.target.value)}
+                        autoComplete="off"
+                    />
+                </form>
+            )}
 
             <div className="absolute bottom-8 text-gray-400 text-sm">
                 SMP 1 Montasik - Sistem Kehadiran Perpustakaan
